@@ -3,972 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Dropbox Paket Pintar | SmartBox Control Center</title>
-
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- CSS -->
+    <title>SmartBox Cyber v6.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <!-- BACKGROUND EFFECT -->
-    <div class="background-grid"></div>
-    <div class="glow glow-one"></div>
-    <div class="glow glow-two"></div>
+<!-- ===== LOADING SCREEN ===== -->
+<div id="loadingScreen" class="loading-screen">
+    <div class="loader">
+        <div class="loader-box"><i class="fas fa-cube"></i></div>
+        <div class="loader-ring"></div>
+        <div class="loader-ring"></div>
+        <div class="loader-ring"></div>
+    </div>
+    <span class="loader-text">INITIALIZING SYSTEM...</span>
+</div>
 
-    
-    <!-- =========================
-         MAIN APPLICATION
-    ========================== -->
+<!-- ===== CYBER BACKGROUND ===== -->
+<div class="cyber-bg"><div class="grid-overlay"></div><div class="scanline"></div><div class="glitch-bar"></div></div>
 
-    <main id="app" class="app">
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="fas fa-cube"></i></div>
+        <div><h1>SMART<span>BOX</span></h1><span>v6.0 PREMIUM</span></div>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="#" class="active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="#" data-section="access"><i class="fas fa-shield-halved"></i> Kontrol Akses</a>
+        <a href="#" data-section="activity"><i class="fas fa-history"></i> Riwayat</a>
+        <a href="#" data-section="settings"><i class="fas fa-cog"></i> Pengaturan</a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="changePasswordBtn"><i class="fas fa-key"></i> Ubah Sandi</a>
+        <a href="#" id="exportDataBtn"><i class="fas fa-download"></i> Export Data</a>
+        <a href="#" id="resetSystemBtn"><i class="fas fa-redo"></i> Reset Sistem</a>
+        <a href="#" id="aboutBtn"><i class="fas fa-info-circle"></i> Tentang</a>
+        <div class="sidebar-divider"></div>
+        <a href="#" id="themeToggleSidebar"><i class="fas fa-moon"></i> Mode Gelap</a>
+        <a href="#" id="refreshDataBtn"><i class="fas fa-sync"></i> Refresh Data</a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="status-cyber"><span class="pulse-dot"></span><span>SYSTEM ONLINE</span></div>
+        <span class="version">CYBERPUNK v6.0</span>
+    </div>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+<!-- ===== HEADER ===== -->
+<header class="header">
+    <div class="header-left">
+        <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+        <div class="header-brand"><i class="fas fa-cube"></i><div><span class="brand-main">SMARTBOX</span><span class="brand-sub">CONTROL CENTER</span></div></div>
+    </div>
+    <div class="header-right">
+        <div class="connection-cyber"><span class="cyber-led online" id="espLed"></span><span id="espText">ONLINE</span></div>
+        <div class="clock-cyber"><span id="clockTime"></span><span id="clockDate"></span></div>
+        <button class="notif-cyber" id="notifBtn" title="Notifikasi"><i class="fas fa-bell"></i><span class="notif-count" id="notifCount">0</span></button>
+    </div>
+</header>
 
-        <!-- SIDEBAR -->
+<!-- ===== MAIN ===== -->
+<main class="main">
 
-        <aside class="sidebar">
-
-            <div class="sidebar-brand">
-
-                <div class="sidebar-logo">
-                    <i class="fa-solid fa-box"></i>
-                </div>
-
-                <div>
-                    <strong>SmartBox</strong>
-                    <span>CONTROL CENTER</span>
-                </div>
-
+<!-- DASHBOARD -->
+<section id="dashboardSection" class="section">
+    <!-- HERO -->
+    <div class="hero-cyber">
+        <div class="hero-text">
+            <span class="hero-tag"><i class="fas fa-circle"></i> LIVE MONITORING</span>
+            <h1>DROPBOX <span>PAKET PINTAR</span></h1>
+            <p>Real-time monitoring sistem keamanan & paket</p>
+            <div class="hero-stats">
+                <div><span>Total Paket</span><strong id="heroTotalPaket">0</strong></div>
+                <div><span>Hari Ini</span><strong id="heroHariIni">0</strong></div>
             </div>
-
-
-            <nav class="navigation">
-
-                <button
-                    class="nav-item active"
-                    data-section="dashboard"
-                >
-                    <i class="fa-solid fa-grid-2"></i>
-                    <span>Dashboard</span>
-                </button>
-
-
-                <button
-                    class="nav-item"
-                    data-section="access"
-                >
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <span>Kontrol Akses</span>
-                </button>
-
-
-                <button
-                    class="nav-item"
-                    data-section="activity"
-                >
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span>Aktivitas Sistem</span>
-                </button>
-
-
-                <button
-                    class="nav-item"
-                    data-section="settings"
-                >
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Pengaturan</span>
-                </button>
-
-            </nav>
-
-
-            <div class="sidebar-bottom">
-
-                <div class="system-mini-status">
-
-                    <span class="status-dot"></span>
-
-                    <div>
-                        <small>SYSTEM STATUS</small>
-                        <strong>ONLINE</strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </aside>
-
-
-
-        <!-- CONTENT -->
-
-        <section class="main-content">
-
-
-            <!-- TOP BAR -->
-
-            <header class="topbar">
-
-                <div>
-
-                    <span class="page-kicker">
-                        SMARTBOX MANAGEMENT
-                    </span>
-
-                    <h2 id="pageTitle">
-                        Dashboard
-                    </h2>
-
-                    <p id="dateLine">
-                        Memuat waktu sistem...
-                    </p>
-
-                </div>
-
-
-                <div class="topbar-right">
-
-                    <div class="connection-status">
-
-                        <span class="status-dot"></span>
-
-                        <span>ESP32 READY</span>
-
-                    </div>
-
-
-                    <div class="admin-avatar">
-                        W
-                    </div>
-
-                </div>
-
-            </header>
-
-
-
-            <!-- =========================
-                 DASHBOARD
-            ========================== -->
-
-            <section
-                id="dashboardSection"
-                class="content-section"
-            >
-
-
-                <!-- HERO -->
-
-                <div class="dashboard-hero">
-
-                    <div>
-
-                        <span class="hero-badge">
-                            <span></span>
-                            LIVE SYSTEM
-                        </span>
-
-                        <h2>
-                            Monitoring Dropbox
-                            <span>Paket Pintar</span>
-                        </h2>
-
-                        <p>
-                            Pantau status paket, kondisi sensor,
-                            pintu, dan sistem keamanan secara
-                            real-time.
-                        </p>
-
-                    </div>
-
-
-                    <div class="hero-box-visual">
-
-                        <div class="smartbox-icon">
-                            <i class="fa-solid fa-box-open"></i>
-                        </div>
-
-                        <div class="pulse-ring"></div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- STATUS CARDS -->
-
-                <div class="status-grid">
-
-
-                    <!-- PROXIMITY -->
-
-                    <article class="status-card">
-
-                        <div class="card-icon sensor-icon">
-                            <i class="fa-solid fa-tower-broadcast"></i>
-                        </div>
-
-                        <div class="card-content">
-
-                            <span>PROXIMITY SENSOR</span>
-
-                            <strong id="proximityStatus">
-                                MENUNGGU DATA
-                            </strong>
-
-                            <small>
-                                Live monitoring paket
-                            </small>
-
-                        </div>
-
-                        <div class="card-indicator waiting"></div>
-
-                    </article>
-
-
-
-                    <!-- PACKAGE -->
-
-                    <article class="status-card">
-
-                        <div class="card-icon package-icon">
-                            <i class="fa-solid fa-box"></i>
-                        </div>
-
-                        <div class="card-content">
-
-                            <span>STATUS PAKET</span>
-
-                            <strong id="packageStatus">
-                                BELUM ADA DATA
-                            </strong>
-
-                            <small id="packageSub">
-                                Menunggu pembacaan sensor
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-
-                    <!-- DOOR -->
-
-                    <article class="status-card">
-
-                        <div class="card-icon door-icon">
-                            <i class="fa-solid fa-door-closed"></i>
-                        </div>
-
-                        <div class="card-content">
-
-                            <span>STATUS PINTU</span>
-
-                            <strong id="doorStatus">
-                                TERKUNCI
-                            </strong>
-
-                            <small id="doorSub">
-                                Sistem dalam kondisi aman
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-
-                    <!-- LIMIT SWITCH -->
-
-                    <article class="status-card">
-
-                        <div class="card-icon limit-icon">
-                            <i class="fa-solid fa-toggle-on"></i>
-                        </div>
-
-                        <div class="card-content">
-
-                            <span>LIMIT SWITCH</span>
-
-                            <strong id="limitSwitch">
-                                OPEN
-                            </strong>
-
-                            <small>
-                                Status posisi pintu
-                            </small>
-
-                        </div>
-
-                    </article>
-
-
-                </div>
-
-
-
-                <!-- MONITORING GRID -->
-
-                <div class="monitor-grid">
-
-
-                    <!-- LIVE MONITOR -->
-
-                    <article class="panel live-monitor-panel">
-
-                        <div class="panel-header">
-
-                            <div>
-
-                                <span class="panel-kicker">
-                                    REAL-TIME
-                                </span>
-
-                                <h3>
-                                    Live Monitoring
-                                </h3>
-
-                            </div>
-
-
-                            <span class="live-badge">
-                                <span></span>
-                                LIVE
-                            </span>
-
-                        </div>
-
-
-                        <div class="monitor-visual">
-
-                            <div class="signal-area">
-
-                                <div class="sensor-point">
-
-                                    <i class="fa-solid fa-tower-broadcast"></i>
-
-                                </div>
-
-                                <div class="signal signal-one"></div>
-                                <div class="signal signal-two"></div>
-                                <div class="signal signal-three"></div>
-
-                            </div>
-
-
-                            <div class="monitor-data">
-
-                                <span>PROXIMITY STATUS</span>
-
-                                <strong id="hardwareProximity">
-                                    WAITING
-                                </strong>
-
-                                <p>
-                                    Data akan diterima dari
-                                    ESP32 / sistem IoT.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="monitor-footer">
-
-                            <div>
-
-                                <span class="mini-label">
-                                    CONNECTION
-                                </span>
-
-                                <strong id="esp32Status">
-                                    READY FOR CONNECTION
-                                </strong>
-
-                            </div>
-
-                            <div class="signal-bars">
-
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-
-
-                    <!-- DOOR CONTROL -->
-
-                    <article class="panel door-control-panel">
-
-                        <div class="panel-header">
-
-                            <div>
-
-                                <span class="panel-kicker">
-                                    SECURITY ACCESS
-                                </span>
-
-                                <h3>
-                                    Kontrol Pintu
-                                </h3>
-
-                            </div>
-
-                            <i class="fa-solid fa-shield-halved panel-icon"></i>
-
-                        </div>
-
-
-                        <div class="door-visual-area">
-
-                            <div
-                                id="doorVisual"
-                                class="door-lock-visual"
-                            >
-
-                                <i class="fa-solid fa-lock"></i>
-
-                                <strong>
-                                    LOCKED
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="door-info">
-
-                            <div>
-
-                                <span>DOOR STATUS</span>
-
-                                <strong id="accessDoorStatus">
-                                    TERKUNCI
-                                </strong>
-
-                            </div>
-
-
-                            <div>
-
-                                <span>LIMIT SWITCH</span>
-
-                                <strong id="accessLimitStatus">
-                                    OPEN
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            id="openDoorBtn"
-                            class="primary-action"
-                        >
-
-                            <i class="fa-solid fa-lock-open"></i>
-
-                            <span>Request Door Access</span>
-
-                            <i class="fa-solid fa-arrow-right"></i>
-
-                        </button>
-
-
-                        <p class="security-note">
-
-                            <i class="fa-solid fa-circle-info"></i>
-
-                            Pintu hanya dapat dibuka setelah
-                            autentikasi berhasil.
-
-                        </p>
-
-                    </article>
-
-
-                </div>
-
-
-
-                <!-- ACTIVITY -->
-
-                <article class="panel activity-panel">
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <span class="panel-kicker">
-                                SYSTEM LOG
-                            </span>
-
-                            <h3>
-                                Aktivitas Terbaru
-                            </h3>
-
-                        </div>
-
-
-                        <button
-                            class="text-btn"
-                            data-section="activity"
-                        >
-                            Lihat Semua
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        id="activityList"
-                        class="activity-list"
-                    >
-
-                        <!-- JavaScript -->
-
-                    </div>
-
-                </article>
-
-
-            </section>
-
-
-
-            <!-- =========================
-                 ACCESS SECTION
-            ========================== -->
-
-            <section
-                id="accessSection"
-                class="content-section hidden"
-            >
-
-                <div class="section-intro">
-
-                    <span class="page-kicker">
-                        SECURITY AUTHENTICATION
-                    </span>
-
-                    <h2>
-                        Kontrol Akses Pintu
-                    </h2>
-
-                    <p>
-                        Akses pintu memerlukan autentikasi
-                        sebelum perintah unlock dikirim.
-                    </p>
-
-                </div>
-
-
-                <div class="access-layout">
-
-
-                    <article class="panel access-security-card">
-
-                        <div class="security-shield">
-
-                            <i class="fa-solid fa-shield-halved"></i>
-
-                        </div>
-
-
-                        <h3>
-                            Secure Door Access
-                        </h3>
-
-                        <p>
-                            Verifikasi PIN sebelum membuka
-                            mekanisme kunci SmartBox.
-                        </p>
-
-
-                        <button
-                            id="openDoorBtn2"
-                            class="primary-action"
-                        >
-
-                            <i class="fa-solid fa-key"></i>
-
-                            Verifikasi & Buka Pintu
-
-                        </button>
-
-                    </article>
-
-
-
-                    <article class="panel access-status-card">
-
-                        <h3>
-                            Status Mekanisme
-                        </h3>
-
-
-                        <div class="mechanism-row">
-
-                            <span>
-                                <i class="fa-solid fa-door-closed"></i>
-                                Pintu
-                            </span>
-
-                            <strong id="accessDoorStatus2">
-                                TERKUNCI
-                            </strong>
-
-                        </div>
-
-
-                        <div class="mechanism-row">
-
-                            <span>
-                                <i class="fa-solid fa-toggle-on"></i>
-                                Limit Switch
-                            </span>
-
-                            <strong id="accessLimitStatus2">
-                                OPEN
-                            </strong>
-
-                        </div>
-
-
-                        <div class="mechanism-row">
-
-                            <span>
-                                <i class="fa-solid fa-lock"></i>
-                                Solenoid
-                            </span>
-
-                            <strong id="solenoidStatus">
-                                LOCK
-                            </strong>
-
-                        </div>
-
-
-                        <div class="limit-switch-info">
-
-                            <i class="fa-solid fa-circle-info"></i>
-
-                            <p>
-                                Sistem mengunci kembali berdasarkan
-                                status limit switch, bukan timer.
-                            </p>
-
-                        </div>
-
-                    </article>
-
-
-                </div>
-
-            </section>
-
-
-
-            <!-- =========================
-                 ACTIVITY SECTION
-            ========================== -->
-
-            <section
-                id="activitySection"
-                class="content-section hidden"
-            >
-
-                <div class="section-intro">
-
-                    <span class="page-kicker">
-                        SYSTEM HISTORY
-                    </span>
-
-                    <h2>
-                        Aktivitas Sistem
-                    </h2>
-
-                    <p>
-                        Riwayat monitoring dan aktivitas
-                        keamanan SmartBox.
-                    </p>
-
-                </div>
-
-
-                <article class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            Activity Log
-                        </h3>
-
-
-                        <button
-                            id="clearLog"
-                            class="danger-text-btn"
-                        >
-                            <i class="fa-solid fa-trash"></i>
-                            Clear Log
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        id="fullActivityList"
-                        class="activity-list full-list"
-                    >
-
-                        <!-- JavaScript -->
-
-                    </div>
-
-                </article>
-
-            </section>
-
-
-
-            <!-- =========================
-                 SETTINGS
-            ========================== -->
-
-            <section
-                id="settingsSection"
-                class="content-section hidden"
-            >
-
-                <div class="section-intro">
-
-                    <span class="page-kicker">
-                        SYSTEM CONFIGURATION
-                    </span>
-
-                    <h2>
-                        Pengaturan Sistem
-                    </h2>
-
-                    <p>
-                        Konfigurasi koneksi dan parameter
-                        SmartBox.
-                    </p>
-
-                </div>
-
-
-                <div class="settings-grid">
-
-
-                    <article class="panel setting-card">
-
-                        <div class="setting-icon">
-                            <i class="fa-solid fa-microchip"></i>
-                        </div>
-
-                        <h3>
-                            ESP32 Gateway
-                        </h3>
-
-                        <p>
-                            Koneksi perangkat IoT dan
-                            komunikasi sistem.
-                        </p>
-
-                        <span id="gatewayStatus">
-                            Belum terhubung
-                        </span>
-
-                    </article>
-
-
-
-                    <article class="panel setting-card">
-
-                        <div class="setting-icon">
-                            <i class="fa-solid fa-wifi"></i>
-                        </div>
-
-                        <h3>
-                            Network
-                        </h3>
-
-                        <p>
-                            Konfigurasi koneksi jaringan
-                            untuk sistem monitoring.
-                        </p>
-
-                        <span>
-                            IoT Ready
-                        </span>
-
-                    </article>
-
-
-
-                    <article class="panel setting-card">
-
-                        <div class="setting-icon">
-                            <i class="fa-solid fa-database"></i>
-                        </div>
-
-                        <h3>
-                            System Data
-                        </h3>
-
-                        <p>
-                            Status dan riwayat sistem
-                            SmartBox.
-                        </p>
-
-                        <span>
-                            Monitoring Active
-                        </span>
-
-                    </article>
-
-
-                </div>
-
-            </section>
-
-
-        </section>
-
-    </main>
-
-
-
-    <!-- =========================
-         PIN MODAL
-    ========================== -->
-
-    <div
-        id="pinModal" class="modal hidden"
-    >
-
-        <div class="modal-box">
-
-            <button
-                id="closeModal"
-                class="modal-close"
-            >
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-
-            <div class="modal-icon">
-
-                <i class="fa-solid fa-shield-halved"></i>
-
-            </div>
-
-
-            <span class="modal-kicker">
-                SECURITY VERIFICATION
-            </span>
-
-
-            <h2>
-                Verifikasi Akses
-            </h2>
-
-
-            <p>
-                Masukkan PIN untuk mengirim
-                perintah membuka kunci.
-            </p>
-
-
-            <div class="input-group">
-
-                <label for="pinInput">
-                    Security PIN
-                </label>
-
-
-                <input
-                    type="password"
-                    id="pinInput"
-                    inputmode="numeric"
-                    maxlength="6"
-                    placeholder="••••"
-                >
-
-            </div>
-
-
-            <p
-                id="pinMessage"
-                class="form-message"
-            ></p>
-
-
-            <div class="modal-actions">
-
-                <button
-                    id="cancelPin"
-                    class="secondary-action"
-                >
-                    Batal
-                </button>
-
-
-                <button
-                    id="confirmPin"
-                    class="primary-action"
-                >
-                    <i class="fa-solid fa-shield"></i>
-                    Verifikasi
-                </button>
-
-            </div>
-
-
-            <div class="modal-security-info">
-
-                <i class="fa-solid fa-lock"></i>
-
-                <span>
-                    Akses akan dicatat pada activity log.
-                </span>
-
-            </div>
-
         </div>
-
+        <div class="hero-display">
+            <div class="display-screen">
+                <div class="screen-content"><i class="fas fa-box-open"></i><span>SYSTEM READY</span></div>
+                <div class="scan-effect"></div>
+            </div>
+        </div>
     </div>
 
+    <!-- PROGRESS BAR SISTEM -->
+    <div class="system-progress">
+        <div class="progress-label"><span>Sistem Kesehatan</span><span id="progressPercent">98%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:98%"></div></div>
+    </div>
 
+    <!-- STATS -->
+    <div class="stats-cyber">
+        <div class="stat-card" title="Status sensor proximity">
+            <div class="stat-icon cyan"><i class="fas fa-tower-broadcast"></i></div>
+            <div class="stat-info"><span>PROXIMITY</span><strong id="proxStatus">CLEAR</strong><small id="proxSub">No package</small></div>
+            <div class="stat-bar cyan"></div>
+        </div>
+        <div class="stat-card" title="Status paket di dropbox">
+            <div class="stat-icon pink"><i class="fas fa-box"></i></div>
+            <div class="stat-info"><span>PAKET</span><strong id="pkgStatus">KOSONG</strong><small id="pkgSub">Tidak ada</small></div>
+            <div class="stat-bar pink"></div>
+        </div>
+        <div class="stat-card" title="Status pintu dropbox">
+            <div class="stat-icon yellow"><i class="fas fa-door-closed"></i></div>
+            <div class="stat-info"><span>PINTU</span><strong id="doorStatus">TERKUNCI</strong><small id="doorSub">Aman</small></div>
+            <div class="stat-bar yellow"></div>
+        </div>
+        <div class="stat-card" title="Status limit switch">
+            <div class="stat-icon green"><i class="fas fa-toggle-on"></i></div>
+            <div class="stat-info"><span>LIMIT</span><strong id="limitStatus">CLOSED</strong><small>Pintu tertutup</small></div>
+            <div class="stat-bar green"></div>
+        </div>
+    </div>
 
-    <!-- TOAST -->
+    <!-- CHARTS -->
+    <div class="charts-cyber">
+        <div class="chart-box">
+            <div class="chart-header">
+                <h3><i class="fas fa-chart-line"></i> AKTIVITAS 7 HARI</h3>
+                <div class="chart-meta"><span>Total: <strong id="weekTotal">0</strong></span><span>Peak: <strong id="weekPeak">-</strong></span></div>
+            </div>
+            <div class="chart-wrap"><canvas id="activityChart"></canvas></div>
+        </div>
+        <div class="chart-box">
+            <div class="chart-header"><h3><i class="fas fa-chart-pie"></i> DISTRIBUSI</h3></div>
+            <div class="chart-wrap"><canvas id="distributionChart"></canvas></div>
+        </div>
+    </div>
 
-    <div id="toast" class="toast"></div>
+    <!-- BOTTOM -->
+    <div class="bottom-cyber">
+        <div class="panel-cyber">
+            <div class="panel-head"><span class="panel-tag"><i class="fas fa-circle"></i> REAL-TIME</span><h3>Live Monitor</h3></div>
+            <div class="monitor-body">
+                <div class="signal-area">
+                    <div class="signal-dot"><i class="fas fa-satellite-dish"></i></div>
+                    <div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div>
+                </div>
+                <div class="monitor-data"><span>PROXIMITY</span><strong id="hardProx">CLEAR</strong><p>Data dari ESP32</p></div>
+            </div>
+            <div class="monitor-foot"><div><span>ESP32</span><strong id="espStatus">CONNECTED</strong></div><div class="bars"><span></span><span></span><span></span><span></span></div></div>
+        </div>
 
+        <div class="panel-cyber door-panel">
+            <div class="panel-head"><span class="panel-tag"><i class="fas fa-circle"></i> SECURITY</span><h3>Kontrol Pintu</h3></div>
+            <div class="door-display" id="doorDisplay"><i class="fas fa-lock"></i><strong>LOCKED</strong></div>
+            <div class="door-stats">
+                <div><span>PINTU</span><strong id="accDoor">TERKUNCI</strong></div>
+                <div><span>LIMIT</span><strong id="accLimit">CLOSED</strong></div>
+                <div><span>SOLENOID</span><strong id="accSolenoid">LOCK</strong></div>
+            </div>
+            <button id="openBtn" class="btn-cyber" title="Buka pintu dengan verifikasi PIN"><i class="fas fa-unlock-alt"></i> BUKA PINTU</button>
+            <div class="note-cyber"><i class="fas fa-info-circle"></i> Kunci otomatis saat limit switch aktif</div>
+        </div>
+    </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- ACTIVITY -->
+    <div class="panel-cyber activity-panel">
+        <div class="panel-head"><span class="panel-tag"><i class="fas fa-circle"></i> SYSTEM LOG</span><h3>Aktivitas</h3><button class="btn-link" data-section="activity">Lihat Semua →</button></div>
+        <div id="activityList" class="activity-list"></div>
+    </div>
+</section>
 
-    <script src="script.js"></script>
+<!-- ACCESS -->
+<section id="accessSection" class="section hidden">
+    <div class="section-head"><span class="section-tag">SECURITY</span><h2>Kontrol Akses</h2><p>Verifikasi PIN untuk membuka</p></div>
+    <div class="access-grid">
+        <div class="panel-cyber access-card"><div class="shield-big"><i class="fas fa-shield-halved"></i></div><h3>Secure Access</h3><p>Masukkan PIN</p><button id="openBtn2" class="btn-cyber"><i class="fas fa-key"></i> VERIFIKASI</button></div>
+        <div class="panel-cyber access-status"><h3>Status Mekanisme</h3>
+            <div class="mech-row"><span><i class="fas fa-door-closed"></i> Pintu</span><strong id="accDoor2">TERKUNCI</strong></div>
+            <div class="mech-row"><span><i class="fas fa-toggle-on"></i> Limit</span><strong id="accLimit2">CLOSED</strong></div>
+            <div class="mech-row"><span><i class="fas fa-lock"></i> Solenoid</span><strong id="accSolenoid2">LOCK</strong></div>
+            <div class="info-cyber"><i class="fas fa-info-circle"></i><p>Mengunci berdasarkan limit switch</p></div>
+        </div>
+    </div>
+</section>
 
+<!-- ACTIVITY FULL -->
+<section id="activitySection" class="section hidden">
+    <div class="section-head"><span class="section-tag">HISTORY</span><h2>Semua Aktivitas</h2></div>
+    <div class="panel-cyber"><div class="panel-head"><h3>Activity Log</h3><button id="clearLog" class="btn-danger-link"><i class="fas fa-trash"></i> Clear</button></div><div id="fullActivityList" class="activity-list"></div></div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settingsSection" class="section hidden">
+    <div class="section-head"><span class="section-tag">CONFIG</span><h2>Pengaturan</h2></div>
+    <div class="settings-grid">
+        <div class="panel-cyber"><div class="setting-icon"><i class="fas fa-microchip"></i></div><h3>ESP32 Gateway</h3><p>Koneksi IoT</p><span id="gatewayStatus" class="status-badge green">Connected</span></div>
+        <div class="panel-cyber"><div class="setting-icon"><i class="fas fa-wifi"></i></div><h3>Network</h3><p>Konfigurasi</p><span class="status-badge cyan">Active</span></div>
+        <div class="panel-cyber"><div class="setting-icon"><i class="fas fa-database"></i></div><h3>System Data</h3><p>Status</p><span class="status-badge green">Online</span></div>
+    </div>
+</section>
+</main>
+
+<!-- ===== MODALS ===== -->
+<div id="pinModal" class="modal hidden"><div class="modal-cyber">
+    <button id="closeModal" class="modal-close"><i class="fas fa-times"></i></button>
+    <div class="modal-icon"><i class="fas fa-shield-halved"></i></div>
+    <span class="modal-tag">VERIFICATION</span><h2>Masukkan PIN</h2><p>PIN untuk membuka pintu</p>
+    <input type="password" id="pinInput" maxlength="6" placeholder="••••••" class="pin-input-cyber">
+    <p id="pinMsg" class="pin-msg"></p>
+    <div class="modal-actions"><button id="cancelPin" class="btn-cyber secondary">Batal</button><button id="confirmPin" class="btn-cyber"><i class="fas fa-shield"></i> Verifikasi</button></div>
+    <div class="modal-foot"><i class="fas fa-lock"></i> Dicatat di log</div>
+</div></div>
+
+<div id="changePasswordModal" class="modal hidden"><div class="modal-cyber">
+    <button id="closeChangePassword" class="modal-close"><i class="fas fa-times"></i></button>
+    <div class="modal-icon"><i class="fas fa-key"></i></div>
+    <span class="modal-tag">SECURITY</span><h2>Ubah Sandi</h2><p>Ganti PIN keamanan</p>
+    <div class="input-group-cyber"><label>PIN Lama</label><input type="password" id="oldPin" maxlength="6" placeholder="••••••" class="pin-input-cyber"></div>
+    <div class="input-group-cyber"><label>PIN Baru</label><input type="password" id="newPin" maxlength="6" placeholder="••••••" class="pin-input-cyber"></div>
+    <div class="input-group-cyber"><label>Konfirmasi</label><input type="password" id="confirmNewPin" maxlength="6" placeholder="••••••" class="pin-input-cyber"></div>
+    <p id="changePinMsg" class="pin-msg"></p>
+    <div class="modal-actions"><button id="cancelChangePassword" class="btn-cyber secondary">Batal</button><button id="confirmChangePassword" class="btn-cyber"><i class="fas fa-save"></i> Simpan</button></div>
+</div></div>
+
+<div id="resetModal" class="modal hidden"><div class="modal-cyber">
+    <button id="closeReset" class="modal-close"><i class="fas fa-times"></i></button>
+    <div class="modal-icon" style="color:var(--pink);"><i class="fas fa-exclamation-triangle"></i></div>
+    <span class="modal-tag" style="color:var(--pink);">WARNING</span><h2>Reset Sistem?</h2><p>Semua data akan dihapus</p>
+    <div class="modal-actions"><button id="cancelReset" class="btn-cyber secondary">Batal</button><button id="confirmReset" class="btn-cyber" style="background:linear-gradient(135deg,var(--pink),var(--pink-dark));">Reset</button></div>
+</div></div>
+
+<div id="aboutModal" class="modal hidden"><div class="modal-cyber">
+    <button id="closeAbout" class="modal-close"><i class="fas fa-times"></i></button>
+    <div class="modal-icon"><i class="fas fa-cube"></i></div>
+    <span class="modal-tag">INFO</span><h2>SmartBox Cyber v6.0</h2>
+    <div class="about-content"><p><strong>Sistem Monitoring Dropbox Paket Pintar</strong></p><p>Versi: 6.0 Premium</p><p>⚡ ESP32 Ready | Limit Switch Logic</p><p>🎨 Font: Orbitron + Exo 2 + Rajdhani</p><p style="font-size:10px;color:var(--text-muted);">© 2026 SmartBox Security</p></div>
+    <button id="closeAboutBtn" class="btn-cyber" style="width:100%;margin-top:12px;">Tutup</button>
+</div></div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast" class="toast-cyber"></div>
+
+<script src="script.js"></script>
 </body>
 </html>

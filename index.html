@@ -122,7 +122,7 @@
         <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
     </div>
 
-    <!-- 4 KARTU DASHBOARD - SESUAI SCREENSHOT -->
+    <!-- 4 KARTU DASHBOARD -->
     <div class="stats-cyber">
         <!-- KARTU 1: TOTAL PAKET -->
         <div class="stat-card" id="cardTotalPaket">
@@ -135,9 +135,9 @@
             <div class="stat-bar cyan"></div>
         </div>
 
-        <!-- KARTU 2: PAKET TERDETEKSI -->
+        <!-- KARTU 2: PAKET TERDETEKSI - LOGO PAKET BUKAN SINYAL -->
         <div class="stat-card" id="cardDeteksi">
-            <div class="stat-icon pink"><i class="fas fa-tower-broadcast"></i></div>
+            <div class="stat-icon pink"><i class="fas fa-box"></i></div>
             <div class="stat-info">
                 <span>PAKET TERDETEKSI</span>
                 <strong id="deteksiStatus">TIDAK ADA PAKET</strong>
@@ -146,12 +146,12 @@
             <div class="stat-bar pink"></div>
         </div>
 
-        <!-- KARTU 3: STATUS PINTU -->
+        <!-- KARTU 3: STATUS PINTU - CAPSLOCK -->
         <div class="stat-card" id="cardPintu">
             <div class="stat-icon yellow"><i class="fas fa-door-closed"></i></div>
             <div class="stat-info">
                 <span>STATUS PINTU</span>
-                <strong id="pintuStatus">Tertutup</strong>
+                <strong id="pintuStatus">TERTUTUP</strong>
                 <small id="pintuSub">🔒 Terkunci</small>
             </div>
             <div class="stat-bar yellow"></div>
@@ -219,7 +219,7 @@
             </div>
         </div>
 
-        <!-- KONTROL PINTU -->
+        <!-- KONTROL PINTU - TANPA TOMBOL HUBUNGKAN ESP32 -->
         <div class="panel-cyber door-panel">
             <div class="panel-head">
                 <span class="panel-tag"><i class="fas fa-circle"></i> SECURITY</span>
@@ -236,9 +236,6 @@
             </div>
             <button id="openBtn" class="btn-cyber" title="Buka pintu dengan verifikasi PIN">
                 <i class="fas fa-unlock-alt"></i> BUKA PINTU
-            </button>
-            <button id="connectBtn" class="btn-cyber" style="background:linear-gradient(135deg,var(--green),#00aa55);margin-top:10px;">
-                <i class="fas fa-link"></i> HUBUNGKAN ESP32
             </button>
             <div class="note-cyber">
                 <i class="fas fa-info-circle"></i> Kunci otomatis saat limit switch aktif (BUKAN TIMER)

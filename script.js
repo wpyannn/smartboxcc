@@ -58,7 +58,6 @@ const el = {
     accSolenoid2: $("accSolenoid2"),
     openBtn: $("openBtn"),
     openBtn2: $("openBtn2"),
-    connectBtn: $("connectBtn"),
     pinModal: $("pinModal"),
     pinInput: $("pinInput"),
     pinMsg: $("pinMsg"),
@@ -382,7 +381,7 @@ function setLimitSwitch(closed) {
         state.doorOpen = false;
         state.solenoidUnlocked = false;
 
-        el.pintuStatus.textContent = "Tertutup";
+        el.pintuStatus.textContent = "TERTUTUP";
         el.pintuStatus.style.color = "var(--green)";
         el.pintuSub.innerHTML = "🔒 Terkunci";
         el.accDoor.textContent = "TERTUTUP";
@@ -413,7 +412,7 @@ function setLimitSwitch(closed) {
         state.doorOpen = true;
         state.solenoidUnlocked = true;
 
-        el.pintuStatus.textContent = "Terbuka";
+        el.pintuStatus.textContent = "TERBUKA";
         el.pintuStatus.style.color = "var(--yellow)";
         el.pintuSub.innerHTML = "🔓 Tidak terkunci";
         el.accDoor.textContent = "TERBUKA";
@@ -711,24 +710,22 @@ el.pinInput.addEventListener("keydown", e => {
 });
 
 // =========================================================
-// CONNECT ESP32
+// ESP32 CONNECTION - OTOMATIS TANPA TOMBOL
 // =========================================================
-el.connectBtn.addEventListener("click", function() {
-    if (!state.esp32Connected) {
-        setESP32Connection(true);
-        setTimeout(simulateProximity, 1000);
-        setTimeout(simulateLimitSwitch, 2000);
-        updateProgress(95);
-        updateDashboard();
-        // Inisialisasi grafik dengan data awal
-        for (let i = 0; i < 7; i++) {
-            chartData[i] = Math.floor(Math.random() * 15) + 1;
-        }
-        updateChartData(chartData[chartData.length - 1]);
-    } else {
-        showToast("⚠️ ESP32 sudah terhubung!");
+// ESP32 akan terhubung secara otomatis setelah beberapa detik
+setTimeout(() => {
+    setESP32Connection(true);
+    // Init grafik dengan data awal
+    for (let i = 0; i < 7; i++) {
+        chartData[i] = Math.floor(Math.random() * 15) + 1;
     }
-});
+    updateChartData(chartData[chartData.length - 1]);
+    updateDashboard();
+    updateProgress(95);
+    // Mulai simulasi sensor
+    setTimeout(simulateProximity, 1000);
+    setTimeout(simulateLimitSwitch, 2000);
+}, 3000);
 
 // =========================================================
 // CHANGE PASSWORD
@@ -941,7 +938,7 @@ el.deteksiStatus.style.color = "var(--text-muted)";
 el.deteksiSub.textContent = "Sensor standby";
 el.hardProx.textContent = "MENUNGGU PAKET";
 el.hardProx.style.color = "var(--cyan)";
-el.pintuStatus.textContent = "Tertutup";
+el.pintuStatus.textContent = "TERTUTUP";
 el.pintuStatus.style.color = "var(--green)";
 el.pintuSub.innerHTML = "🔒 Terkunci";
 el.totalPaket.textContent = "0";
@@ -962,4 +959,3 @@ console.log("🚀 SMARTBOX v6.0 FINAL");
 console.log("🔑 PIN Default: 0000");
 console.log("📦 Kapasitas: 20 Paket");
 console.log("📌 Fungsi: setProximity(), setLimitSwitch(), setESP32Connection()");
-console.log("📌 Klik 'HUBUNGKAN ESP32' untuk memulai simulasi");

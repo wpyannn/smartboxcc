@@ -1,6 +1,7 @@
 // =========================================================
 // SMARTBOX v6.0 · GLASS PREMIUM
-// Full JavaScript — Real-time, PIN, Grafik, Simulasi Paket
+// Full JavaScript — ESP32 Gateway, PIN, Grafik Real-time
+// TOTAL PAKET = 0, BERTAMBAH DARI ESP32
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -10,22 +11,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // =========================================================
     var CONFIG = {
         securityPIN: '1234',
-        maxKapasitas: 20,
         maxPinSalah: 3,
         chartLabels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
     };
 
     var state = {
-        esp32Connected: true,
+        esp32Connected: false,
         proximityDetected: false,
         limitSwitchClosed: true,
         doorOpen: false,
         solenoidUnlocked: false,
-        totalPaket: 0,
+        totalPaket: 0,  // MULAI DARI 0
         pinSalahCount: 0,
         activity: [],
         notifCount: 0,
-        chartData: [0, 0, 0, 0, 0, 0, 0],
+        chartData: [0, 0, 0, 0, 0, 0, 0], // SEMUA 0
         todayIndex: 0
     };
 
@@ -34,19 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return map[day] !== undefined ? map[day] : 6;
     }
     state.todayIndex = getDayIndex(new Date().getDay());
-
-    try {
-        var saved = localStorage.getItem('smartbox_data');
-        if (saved) {
-            var parsed = JSON.parse(saved);
-            state.totalPaket = parsed.totalPaket || 0;
-            state.chartData = parsed.chartData || [0, 0, 0, 0, 0, 0, 0];
-            state.activity = parsed.activity || [];
-            state.pinSalahCount = parsed.pinSalahCount || 0;
-            while (state.chartData.length < 7) state.chartData.push(0);
-            state.chartData = state.chartData.slice(0, 7);
-        }
-    } catch (e) { /* ignore */ }
 
     // =========================================================
     // 2. DOM REFS
@@ -63,9 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
         espStatus: $('espStatus'),
         notifCount: $('notifCount'),
         heroTotalPaket: $('heroTotalPaket'),
-        heroKapasitas: $('heroKapasitas'),
-        progressFill: $('progressFill'),
-        progressPercent: $('progressPercent'),
         totalPaket: $('totalPaket'),
         totalPaketSub: $('totalPaketSub'),
         deteksiStatus: $('deteksiStatus'),
@@ -259,11 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateUI() {
         if (el.totalPaket) el.totalPaket.textContent = state.totalPaket;
         if (el.heroTotalPaket) el.heroTotalPaket.textContent = state.totalPaket;
-        if (el.heroKapasitas) el.heroKapasitas.textContent = state.totalPaket + ' / ' + CONFIG.maxKapasitas;
-
-        var progress = Math.min(100, Math.floor((state.totalPaket / CONFIG.maxKapasitas) * 100));
-        if (el.progressFill) el.progressFill.style.width = progress + '%';
-        if (el.progressPercent) el.progressPercent.textContent = progress + '%';
 
         if (state.proximityDetected) {
             if (el.deteksiStatus) {
@@ -289,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (state.doorOpen) {
             if (el.pintuStatus) {
-                el.pintuStatus.textContent = 'terbuka';
+                el.pintuStatus.textContent = 'TERBUKA';
                 el.pintuStatus.style.color = '#facc15';
             }
             if (el.pintuSub) el.pintuSub.innerHTML = '🔓 Tidak terkunci';
@@ -299,11 +278,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 el.doorDisplay.style.borderColor = 'rgba(74,222,128,0.15)';
             }
             if (el.accDoor) {
-                el.accDoor.textContent = 'terbuka';
+                el.accDoor.textContent = 'TERBUKA';
                 el.accDoor.style.color = '#facc15';
             }
             if (el.accDoor2) {
-                el.accDoor2.textContent = 'terbuka';
+                el.accDoor2.textContent = 'TERBUKA';
                 el.accDoor2.style.color = '#facc15';
             }
             if (el.accLimit) {
@@ -390,44 +369,71 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 9. ESP32 STATUS - LANGSUNG ONLINE TANPA NOTIFIKASI
+    // 9. ESP32 STATUS - MENUNGGU KONEKSI
     // =========================================================
     function updateESP32Status() {
-        if (el.espLed) {
-            el.espLed.className = 'cyber-led online';
-        }
-        if (el.espText) {
-            el.espText.textContent = 'ONLINE';
-            el.espText.className = 'online';
-        }
-        if (el.espStatus) {
-            el.espStatus.textContent = 'ONLINE';
-            el.espStatus.style.color = '#4ade80';
-        }
-        if (el.gatewayStatus) {
-            el.gatewayStatus.textContent = 'ONLINE';
-            el.gatewayStatus.className = 'status-badge green';
+        if (state.esp32Connected) {
+            if (el.espLed) {
+                el.espLed.className = 'cyber-led online';
+            }
+            if (el.espText) {
+                el.espText.textContent = 'ONLINE';
+                el.espText.className = 'online';
+                el.espText.style.color = '#4ade80';
+            }
+            if (el.espStatus) {
+                el.espStatus.textContent = 'ONLINE';
+                el.espStatus.style.color = '#4ade80';
+            }
+            if (el.gatewayStatus) {
+                el.gatewayStatus.textContent = 'CONNECTED';
+                el.gatewayStatus.className = 'status-badge green';
+            }
+        } else {
+            if (el.espLed) {
+                el.espLed.className = 'cyber-led';
+                el.espLed.style.background = '#facc15';
+                el.espLed.style.boxShadow = '0 0 14px #facc15';
+            }
+            if (el.espText) {
+                el.espText.textContent = 'MENUNGGU KONEKSI';
+                el.espText.className = '';
+                el.espText.style.color = '#facc15';
+            }
+            if (el.espStatus) {
+                el.espStatus.textContent = 'MENUNGGU KONEKSI';
+                el.espStatus.style.color = '#facc15';
+            }
+            if (el.gatewayStatus) {
+                el.gatewayStatus.textContent = 'MENUNGGU';
+                el.gatewayStatus.className = 'status-badge red';
+            }
         }
         renderDevices();
     }
 
     // =========================================================
-    // 10. PERANGKAT IOT - SEMUA ONLINE
+    // 10. PERANGKAT IOT - MENGIKUTI ESP32
     // =========================================================
     function renderDevices() {
         if (!el.devicesGrid) return;
         el.devicesGrid.innerHTML = '';
+        var isOnline = state.esp32Connected;
         for (var i = 0; i < devices.length; i++) {
             var d = devices[i];
             var item = document.createElement('div');
             item.className = 'device-item';
+            var statusText = isOnline ? 'ONLINE' : 'Menunggu';
+            var statusColor = isOnline ? '#4ade80' : '#facc15';
+            var ledClass = isOnline ? 'online' : 'offline';
+            var ledColor = isOnline ? 'var(--green)' : 'var(--yellow)';
             item.innerHTML = `
                 <div class="dev-icon"><i class="fas ${d.icon}"></i></div>
                 <div class="dev-info">
                     <span class="dev-name">${d.name}</span>
-                    <span class="dev-status" style="color:#4ade80;">ONLINE</span>
+                    <span class="dev-status" style="color:${statusColor}">${statusText}</span>
                 </div>
-                <span class="dev-led online"></span>
+                <span class="dev-led ${ledClass}" style="background:${ledColor};box-shadow:0 0 14px ${ledColor};"></span>
             `;
             el.devicesGrid.appendChild(item);
         }
@@ -453,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: CONFIG.chartLabels,
                 datasets: [{
                     label: 'Paket',
-                    data: state.chartData,
+                    data: state.chartData, // [0,0,0,0,0,0,0]
                     borderColor: '#38bdf8',
                     backgroundColor: grad,
                     fill: true,
@@ -496,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
             data: {
                 labels: ['Paket Diterima', 'Menunggu Diambil', 'Akses Ditolak'],
                 datasets: [{
-                    data: [65, 25, 10],
+                    data: [0, 0, 0],
                     backgroundColor: ['#38bdf8', '#facc15', '#f87171'],
                     borderColor: '#0d0d16',
                     borderWidth: 3
@@ -530,66 +536,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
         activityChart.data.datasets[0].data = state.chartData;
         activityChart.update();
-
-        var diterima = Math.floor(Math.random() * 30) + 50;
-        var menunggu = Math.floor(Math.random() * 20) + 10;
-        var ditolak = 100 - diterima - menunggu;
-        distributionChart.data.datasets[0].data = [diterima, menunggu, ditolak];
-        distributionChart.update();
     }
 
     // =========================================================
-    // 12. TAMBAH PAKET
+    // 12. UPDATE DATA DARI ESP32 (Fungsi untuk integrasi)
     // =========================================================
-    function addPacket() {
-        if (state.totalPaket >= CONFIG.maxKapasitas) {
-            showToast('⚠️ Dropbox Penuh!', 'Kapasitas maksimal 20 paket', 'warning');
-            return;
+    function updateFromESP32(data) {
+        // data = { 
+        //   totalPaket: number,      // total paket saat ini (akan nambah)
+        //   proximity: boolean,      // true jika ada paket terdeteksi
+        //   doorOpen: boolean,       // true jika pintu terbuka
+        //   limitSwitch: boolean,    // true jika limit switch aktif
+        //   connectionStatus: boolean // true jika ESP32 online
+        // }
+        
+        // Update status koneksi ESP32
+        if (data.connectionStatus !== undefined) {
+            state.esp32Connected = data.connectionStatus;
+            if (state.esp32Connected) {
+                addActivity('ESP32 Terhubung', 'Gateway IoT online', 'fa-microchip');
+                showToast('📡 ESP32 Terhubung!', 'Siap menerima data', 'success');
+            } else {
+                addActivity('ESP32 Terputus', 'Gateway IoT offline', 'fa-microchip');
+                showToast('⚠️ ESP32 Terputus!', 'Menunggu koneksi ulang', 'warning');
+            }
         }
-
-        state.totalPaket++;
-        state.proximityDetected = true;
-
-        var todayIdx = getTodayIndex();
-        state.chartData[todayIdx] = (state.chartData[todayIdx] || 0) + 1;
+        
+        // Update data paket - TOTAL PAKET BERTAMBAH
+        if (data.totalPaket !== undefined) {
+            state.totalPaket = data.totalPaket;
+            var todayIdx = getTodayIndex();
+            state.chartData[todayIdx] = state.totalPaket;
+            if (el.totalPaketSub) el.totalPaketSub.textContent = 'Update dari ESP32';
+        }
+        
+        // Update proximity - NOTIFIKASI PAKET MASUK
+        if (data.proximity !== undefined) {
+            state.proximityDetected = data.proximity;
+            if (state.proximityDetected) {
+                showToast('📦 Paket Terdeteksi!', 'Total paket: ' + state.totalPaket, 'success');
+                addActivity('Paket Terdeteksi', 'Total paket: ' + state.totalPaket, 'fa-box');
+            }
+        }
+        
+        // Update door status
+        if (data.doorOpen !== undefined) {
+            state.doorOpen = data.doorOpen;
+            state.solenoidUnlocked = data.doorOpen;
+        }
+        
+        // Update limit switch
+        if (data.limitSwitch !== undefined) {
+            state.limitSwitchClosed = data.limitSwitch;
+        }
 
         updateUI();
-
-        showToast('📦 Paket Masuk!', 'Total paket: ' + state.totalPaket, 'success');
-        addActivity('Paket Terdeteksi', 'Total paket menjadi ' + state.totalPaket, 'fa-box');
-
-        setTimeout(function() {
-            state.proximityDetected = false;
-            updateUI();
-        }, 3000);
-
-        saveData();
     }
 
     // =========================================================
-    // 13. SIMULASI PAKET OTOMATIS (Minimal 3x Sehari)
-    // =========================================================
-    var simulationInterval = null;
-
-    function startSimulation() {
-        setTimeout(function() { addPacket(); }, 5000);
-
-        var minInterval = 10000;
-        var maxInterval = 20000;
-
-        function scheduleNext() {
-            if (simulationInterval) clearTimeout(simulationInterval);
-            var delay = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
-            simulationInterval = setTimeout(function() {
-                addPacket();
-                scheduleNext();
-            }, delay);
-        }
-        scheduleNext();
-    }
-
-    // =========================================================
-    // 14. KONTROL PINTU & PIN
+    // 13. KONTROL PINTU & PIN
     // =========================================================
     function openPinModal() {
         if (state.doorOpen) {
@@ -657,20 +662,10 @@ document.addEventListener('DOMContentLoaded', function() {
         showToast('✅ Akses Diterima!', 'Pintu terbuka', 'success');
         addActivity('Akses Diterima', 'PIN benar. Pintu terbuka', 'fa-check-circle');
         updateUI();
-
-        setTimeout(function() {
-            state.limitSwitchClosed = true;
-            state.doorOpen = false;
-            state.solenoidUnlocked = false;
-            state.proximityDetected = false;
-            showToast('🔒 Pintu Tertutup', 'Limit switch aktif. Solenoid LOCK', 'info');
-            addActivity('Pintu Tertutup', 'Limit switch aktif. Solenoid LOCK', 'fa-door-closed');
-            updateUI();
-        }, 5000);
     }
 
     // =========================================================
-    // 15. LOCK DOOR (Manual)
+    // 14. LOCK DOOR (Manual)
     // =========================================================
     function lockDoor() {
         if (!state.doorOpen) {
@@ -687,7 +682,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 16. HILANGKAN LOADING SCREEN
+    // 15. HILANGKAN LOADING SCREEN
     // =========================================================
     function hideLoadingScreen() {
         if (el.loadingScreen) {
@@ -701,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 17. EVENT LISTENERS
+    // 16. EVENT LISTENERS
     // =========================================================
     function toggleSidebar() {
         if (el.sidebar) el.sidebar.classList.toggle('active');
@@ -767,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 18. CHANGE PASSWORD
+    // 17. CHANGE PASSWORD
     // =========================================================
     function openChangePassword() {
         if (el.changePasswordModal) el.changePasswordModal.classList.remove('hidden');
@@ -840,7 +835,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 19. RESET
+    // 18. RESET
     // =========================================================
     if (el.resetSystemBtn) {
         el.resetSystemBtn.addEventListener('click', function() {
@@ -894,7 +889,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 20. ABOUT
+    // 19. ABOUT
     // =========================================================
     if (el.aboutBtn) {
         el.aboutBtn.addEventListener('click', function() {
@@ -920,7 +915,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 21. EXPORT DATA
+    // 20. EXPORT DATA
     // =========================================================
     if (el.exportDataBtn) {
         el.exportDataBtn.addEventListener('click', function() {
@@ -953,7 +948,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 22. REFRESH
+    // 21. REFRESH
     // =========================================================
     if (el.refreshDataBtn) {
         el.refreshDataBtn.addEventListener('click', function() {
@@ -967,7 +962,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 23. CLEAR LOG
+    // 22. CLEAR LOG
     // =========================================================
     if (el.clearLog) {
         el.clearLog.addEventListener('click', function() {
@@ -990,7 +985,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 24. NOTIFIKASI BADGE
+    // 23. NOTIFIKASI BADGE
     // =========================================================
     if (el.notifBtn) {
         el.notifBtn.addEventListener('click', function() {
@@ -1003,7 +998,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 25. THEME TOGGLE
+    // 24. THEME TOGGLE
     // =========================================================
     var isDark = true;
     if (el.themeToggleSidebar) {
@@ -1029,41 +1024,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =========================================================
-    // 26. INIT - HILANGKAN LOADING SCREEN SETELAH SELESAI
+    // 25. INIT - TANPA SIMULASI, TOTAL PAKET 0
     // =========================================================
     function init() {
         initCharts();
         renderDevices();
         renderActivity();
         updateUI();
-
+        
+        // ESP32 menunggu koneksi dari perangkat nyata
+        state.esp32Connected = false;
         updateESP32Status();
-
-        startSimulation();
 
         addActivity('System Initialized', 'SmartBox v6.0 siap digunakan', 'fa-power-off');
         addActivity('Security Active', 'Monitoring proximity & limit switch', 'fa-shield-halved');
+        addActivity('ESP32', 'Menunggu koneksi dari ESP32', 'fa-microchip');
 
-        showToast('🚀 SmartBox Ready', 'Sistem monitoring aktif', 'info');
+        showToast('🚀 SmartBox Ready', 'Menunggu koneksi ESP32', 'info');
 
         // ===== HILANGKAN LOADING SCREEN =====
         hideLoadingScreen();
 
-        console.log('🚀 SMARTBOX v6.0 FINAL');
+        console.log('🚀 SMARTBOX v6.0 FINAL - ESP32 GATEWAY');
         console.log('🔑 PIN Default: 1234');
-        console.log('📦 Kapasitas: 20 Paket');
-        console.log('📌 ESP32 ONLINE (tanpa notifikasi)');
-        console.log('📌 Semua perangkat IoT ONLINE');
-        console.log('📌 Simulasi paket otomatis berjalan');
+        console.log('📌 TOTAL PAKET: 0 (akan bertambah dari ESP32)');
+        console.log('📌 ESP32 MENUNGGU KONEKSI');
+        console.log('📌 Gunakan SmartBox.updateFromESP32(data) untuk integrasi');
+        console.log('📌 TANPA SIMULASI - Real-time dari ESP32');
     }
 
     init();
 
     // =========================================================
-    // 27. EXPOSE FUNCTIONS
+    // 26. EXPOSE FUNCTIONS
     // =========================================================
     window.SmartBox = {
-        addPacket: addPacket,
+        updateFromESP32: updateFromESP32,
         lockDoor: lockDoor,
         openPinModal: openPinModal,
         state: state,
@@ -1076,5 +1072,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     console.log('📌 SmartBox API: window.SmartBox');
+    console.log('📌 Fungsi: SmartBox.updateFromESP32(data) untuk kirim data dari ESP32');
+    console.log('📌 Contoh: SmartBox.updateFromESP32({ totalPaket: 5, proximity: true, doorOpen: false, limitSwitch: true, connectionStatus: true })');
 
 });

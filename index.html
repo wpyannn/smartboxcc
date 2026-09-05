@@ -77,8 +77,8 @@
     </div>
     <div class="header-right">
         <div class="connection-cyber">
-            <span class="cyber-led online" id="espLed"></span>
-            <span id="espText" class="online">ONLINE</span>
+            <span class="cyber-led" id="espLed"></span>
+            <span id="espText" style="color:#facc15;">MENUNGGU KONEKSI</span>
         </div>
         <div class="clock-cyber">
             <span id="clockTime"></span>
@@ -105,7 +105,6 @@
             <p>Real-time monitoring sistem keamanan & paket</p>
             <div class="hero-stats">
                 <div><span>TOTAL PAKET</span><strong id="heroTotalPaket">0</strong></div>
-                <div><span>KAPASITAS</span><strong id="heroKapasitas">0 / 20</strong></div>
             </div>
         </div>
         <div class="hero-display">
@@ -116,12 +115,6 @@
         </div>
     </div>
 
-    <!-- PROGRESS -->
-    <div class="progress-glass">
-        <div class="progress-label"><span>KESEHATAN SISTEM</span><span id="progressPercent">10%</span></div>
-        <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
-    </div>
-
     <!-- 4 KARTU DASHBOARD -->
     <div class="stats-grid">
         <!-- TOTAL PAKET -->
@@ -130,12 +123,12 @@
             <div class="stat-info">
                 <span>TOTAL PAKET</span>
                 <strong id="totalPaket">0</strong>
-                <small id="totalPaketSub">↑ 0% dari kemarin</small>
+                <small id="totalPaketSub">Menunggu data dari ESP32</small>
             </div>
             <div class="stat-bar cyan"></div>
         </div>
 
-        <!-- PAKET TERDETEKSI - LOGO BOX (fa-box) -->
+        <!-- PAKET TERDETEKSI -->
         <div class="stat-card">
             <div class="stat-icon"><i class="fas fa-box"></i></div>
             <div class="stat-info">
@@ -146,7 +139,7 @@
             <div class="stat-bar cyan"></div>
         </div>
 
-        <!-- STATUS PINTU - HURUF KECIL -->
+        <!-- STATUS PINTU -->
         <div class="stat-card">
             <div class="stat-icon yellow"><i class="fas fa-door-closed"></i></div>
             <div class="stat-info">
@@ -211,7 +204,7 @@
             <div class="monitor-foot">
                 <div>
                     <span>ESP32</span>
-                    <strong id="espStatus" style="color:#4ade80;">ONLINE</strong>
+                    <strong id="espStatus" style="color:#facc15;">MENUNGGU KONEKSI</strong>
                 </div>
                 <div class="bars">
                     <span></span><span></span><span></span><span></span>
@@ -219,7 +212,7 @@
             </div>
         </div>
 
-        <!-- KONTROL PINTU - TANPA TOMBOL HUBUNGKAN ESP32 -->
+        <!-- KONTROL PINTU -->
         <div class="panel-glass door-panel">
             <div class="panel-head">
                 <span class="panel-tag"><i class="fas fa-circle"></i> SECURITY</span>
@@ -311,7 +304,7 @@
             <div class="setting-icon"><i class="fas fa-microchip"></i></div>
             <h3>ESP32 GATEWAY</h3>
             <p>Koneksi perangkat IoT</p>
-            <span id="gatewayStatus" class="status-badge green">ONLINE</span>
+            <span id="gatewayStatus" class="status-badge red">MENUNGGU</span>
         </div>
         <div class="panel-glass">
             <div class="setting-icon"><i class="fas fa-wifi"></i></div>
@@ -389,7 +382,6 @@
             <p><strong>Sistem Monitoring Dropbox Paket Pintar</strong></p>
             <p>Versi: 6.0 Premium</p>
             <p>⚡ ESP32 Ready | Limit Switch Logic</p>
-            <p>📦 Kapasitas: 20 Paket</p>
             <p style="font-size:10px;color:var(--text-muted);">© 2026 SmartBox Security System</p>
         </div>
         <button id="closeAboutBtn" class="btn-cyber" style="width:100%;margin-top:12px;">TUTUP</button>
